@@ -1,0 +1,32 @@
+@import './variables.scss';
+
+.btn {
+    color: var(--btn-text-color);
+    font-size: 18px;
+    background-color: var(--btn-background-color);
+    height: 100%;
+    width: 100%;
+    border: 1px solid var(--btn-border-color);
+    border-radius: 5px;
+    box-shadow: 0 0 2px 0 rgb(60 64 67 / 30%), 0 1px 6px 2px rgb(60 64 67 / 15%);
+    transition: all 0.3s;
+    cursor: pointer;
+    &:hover {
+        color: var(--btn-text-hover-active-color);
+        background-color: var(--btn-background-hover-active-color);
+        border: 1px solid var(--btn-border-hover-active-color);
+        @media (max-width: 767px) {
+            color: var(--btn-text-color);
+            background-color: var(--btn-background-color);
+            border: 1px solid var(--btn-border-color);
+        }
+    }
+    @media (max-width: 767px) {
+        cursor: default;
+        &:active {
+            color: var(--btn-text-hover-active-color);
+            background-color: var(--btn-background-hover-active-color);
+            border: 1px solid var(--btn-border-hover-active-color);
+        }
+    }
+}
