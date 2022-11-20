@@ -7,6 +7,7 @@ const getX = (
     </div>`
 );
 
+
 const getO = (    
     `<div class="O">
         <span></span>
