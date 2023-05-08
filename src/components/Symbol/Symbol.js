@@ -23,4 +23,4 @@ const setO = (cell) => {
     cell.innerHTML = getO;
 }
 
-export { getX , setX , getO , setO};
+export { getX , setX , setO};

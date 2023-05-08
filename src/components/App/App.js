@@ -4,200 +4,239 @@ import './app.scss';
 
 const App = () => {
 
-const combs = [
-        [0,1,2],
-        [3,4,5],
-        [6,7,8],
-        [0,3,6],
-        [1,4,7],
-        [2,5,8],
-        [0,4,8],
-        [2,4,6]
-      ];
-let flag = -2;
-let activeCells = [0,0,0,0,0,0,0,0,0];
+    // === Variables declaration ===
+    // Winner combinations
+    const combs = [
+            [0,1,2], //  ‾‾‾
+            [3,4,5], //  ———
+            [6,7,8], //  ___
+            [0,3,6], //  |
+            [1,4,7], //   |
+            [2,5,8], //    |
+            [0,4,8], //   \
+            [2,4,6]  //   /
+        ];
 
-const toggleFlag = () => {
-    flag = (flag === 0) ? 1 : 0;
-}
+    // Game status flag:
+    // -3 : Draw
+    // -2 : Start game
+    // -1 : Game over
+    //  0 : Turn O
+    //  1 : Turn X
+    let statusFlag = -2;
 
-const showTurn = () => {
-    const turnX = document.querySelector(".turn__x");
-    const turnO = document.querySelector(".turn__o");
-    const message = document.querySelector(".message");
+    // cellsFlags:
+    //  0 : Empty cell
+    //  1 : Setted cell
+    let cellsFlags = [0,0,0,0,0,0,0,0,0];
+    // === / Variables declaration ===
 
-    const switchX = document.querySelector(".switch__x");
-    const switchO = document.querySelector(".switch__o");
-
-    if(flag === 1) {
-        turnX.style.display = "flex";
-        turnO.style.display = "none";
-        message.style.display = "none";
-
-        switchX.classList.add('switch__active');
-        switchO.classList.remove('switch__active');
+    // === Status toggle ===
+    const toggleStatusFlag = () => {
+        statusFlag = (statusFlag === 0) ? 1 : 0;
     }
-    else if(flag === 0) {
-        turnX.style.display = "none";
-        turnO.style.display = "flex";
-        message.style.display = "none";
+    // === / Status toggle ===
 
-        switchX.classList.remove('switch__active');
-        switchO.classList.add('switch__active');
+    // === Winner check ===
+    const winCheck = () => {
+        const cells = document.querySelectorAll("td");
+        
+        combs.forEach(comb => {
+            if(cells[comb[0]].innerHTML === cells[comb[1]].innerHTML && 
+                cells[comb[1]].innerHTML === cells[comb[2]].innerHTML && 
+                cells[comb[0]].innerHTML !== '') {
+                if(cells[comb[0]].innerHTML === getX) {
+                    showWinX();
+                }
+                else {
+                    showWinO();
+                }
+                cross(comb);
+                statusFlag = -1;
+            }
+        });
     }
-    else if(flag === -1) {
-        turnX.style.display = "none";
-        turnO.style.display = "none";
-        message.style.display = "flex";
-        message.textContent = "Game over";
 
-        switchX.classList.remove('switch__active');
-        switchO.classList.remove('switch__active');
+    const showWinX = () => {
+        const win = document.querySelector(".win");
+        const winX = document.querySelector(".win__icon_x");
+        const winO = document.querySelector(".win__icon_o");
+
+        setTimeout(() => {
+            win.style.opacity = "1";
+            win.style.visibility = "visible";
+
+            winX.style.display = "block";
+            winX.style.opacity = "1";
+            winX.style.visibility = "visible";
+
+            winO.style.display = "none";
+            winO.style.opacity = "0";
+            winO.style.visibility = "hidden";
+        } , 300);
+    };
+
+    const showWinO = () => {
+        const win = document.querySelector(".win");
+        const winX = document.querySelector(".win__icon_x");
+        const winO = document.querySelector(".win__icon_o");
+
+        setTimeout(() => {
+            win.style.opacity = "1";
+            win.style.visibility = "visible";
+        
+            winX.style.display = "none";
+            winX.style.opacity = "0";
+            winX.style.visibility = "hidden";
+        
+            winO.style.display = "block";
+            winO.style.opacity = "1";
+            winO.style.visibility = "visible";
+        } , 300);
+    };
+
+    const cross = (comb) => {
+        const line = document.querySelector(".line");
+
+        switch(comb) {
+            case combs[0]:
+            case combs[1]:
+            case combs[2]:
+                line.classList.add("hor");
+                if(comb[0] === 0) { line.style.top = "46px"; }
+                else if(comb[0] === 3) { line.style.top = "155px"; }
+                else if(comb[0] === 6) { line.style.top = "264px"; }
+                break;
+            case combs[3]:
+            case combs[4]:
+            case combs[5]:
+                line.classList.add("vert");
+                if(comb[0] === 0) { line.style.left = "46px"; }
+                else if(comb[0] === 1) { line.style.left = "155px"; }
+                else if(comb[0] === 2) { line.style.left = "264px"; }
+                break;
+            case combs[6]:
+            case combs[7]:
+                line.classList.add("diag");
+                if(comb[0] === 0) { line.style.transform = "rotate(45deg)"; }
+                else if(comb[0] === 2) { line.style.transform = "rotate(-45deg)"; }
+                break;
+        }
     }
-    else if(flag === -2) {
-        turnX.style.display = "none";
-        turnO.style.display = "none";
-        message.style.display = "flex";
-        message.textContent = "Start game";
-
-        switchX.classList.remove('switch__active');
-        switchO.classList.remove('switch__active');
-    }
-}
-
-const showWinX = () => {
-    const win = document.querySelector(".win");
-    const winX = document.querySelector(".win__icon_x");
-    const winY = document.querySelector(".win__icon_o");
-
-    setTimeout(() => {
-        win.style.opacity = "1";
-        win.style.visibility = "visible";
-
-        winX.style.display = "block";
-        winX.style.opacity = "1";
-        winX.style.visibility = "visible";
-
-        winY.style.display = "none";
-        winY.style.opacity = "0";
-        winY.style.visibility = "hidden";
-    } , 300);
-};
-
-const showWinY = () => {
-    const win = document.querySelector(".win");
-    const winX = document.querySelector(".win__icon_x");
-    const winY = document.querySelector(".win__icon_o");
-
-    setTimeout(() => {
-        win.style.opacity = "1";
-        win.style.visibility = "visible";
+    // === / Winner check ===
     
+    // === Turn show ===
+    const showTurn = () => {
+        const turnX = document.querySelector(".turn__x");
+        const turnO = document.querySelector(".turn__o");
+        const message = document.querySelector(".message");
+
+        const switchX = document.querySelector(".switch__x");
+        const switchO = document.querySelector(".switch__o");
+        
+        switch (statusFlag) {
+            case 1:
+                turnX.style.display = "flex";
+                turnO.style.display = "none";
+                message.style.display = "none";
+
+                switchX.classList.add('switch__active');
+                switchO.classList.remove('switch__active');
+                break;
+            case 0:
+                turnX.style.display = "none";
+                turnO.style.display = "flex";
+                message.style.display = "none";
+
+                switchX.classList.remove('switch__active');
+                switchO.classList.add('switch__active');
+                break;
+            case -1:
+                turnX.style.display = "none";
+                turnO.style.display = "none";
+                message.style.display = "flex";
+                message.textContent = "Game over";
+
+                switchX.classList.remove('switch__active');
+                switchO.classList.remove('switch__active');
+                break;
+            case -2:
+                turnX.style.display = "none";
+                turnO.style.display = "none";
+                message.style.display = "flex";
+                message.textContent = "Start game";
+
+                switchX.classList.remove('switch__active');
+                switchO.classList.remove('switch__active');
+                break;
+            case -3:
+                turnX.style.display = "none";
+                turnO.style.display = "none";
+                message.style.display = "flex";
+                message.textContent = "Draw";
+
+                switchX.classList.remove('switch__active');
+                switchO.classList.remove('switch__active');
+                break;
+        }
+    }
+    // === / Turn show ===
+
+    // === Restart button ===
+    const restartGame = () => {
+        const cells = document.querySelectorAll("td");
+        const line = document.querySelector(".line");
+        
+        cells.forEach(cell => cell.innerHTML = '');
+        cellsFlags = [0,0,0,0,0,0,0,0,0];
+        statusFlag = -2;
+        line.className = 'line';
+        line.style = "";
+        showTurn();
+        hideWinScreen();
+    }
+
+    const hideWinScreen = () => {
+        const win = document.querySelector(".win");
+        const winX = document.querySelector(".win__icon_x");
+        const winO = document.querySelector(".win__icon_o");
+
+        win.style.opacity = "0";
+        win.style.visibility = "hidden";
+
         winX.style.display = "none";
         winX.style.opacity = "0";
         winX.style.visibility = "hidden";
-    
-        winY.style.display = "block";
-        winY.style.opacity = "1";
-        winY.style.visibility = "visible";
-    } , 300);
-};
 
-const hideWin = () => {
-    const win = document.querySelector(".win");
-    const winX = document.querySelector(".win__icon_x");
-    const winY = document.querySelector(".win__icon_o");
+        winO.style.display = "none";
+        winO.style.opacity = "0";
+        winO.style.visibility = "hidden";
+    };
+    // === / Restart button ===
 
-    win.style.opacity = "0";
-    win.style.visibility = "hidden";
-
-    winX.style.display = "none";
-    winX.style.opacity = "0";
-    winX.style.visibility = "hidden";
-
-    winY.style.display = "none";
-    winY.style.opacity = "0";
-    winY.style.visibility = "hidden";
-};
-
-const winCheck = () => {
-    const cells = document.querySelectorAll("td");
-    
-    combs.forEach(comb => {
-        if(cells[comb[0]].innerHTML == cells[comb[1]].innerHTML && 
-            cells[comb[1]].innerHTML == cells[comb[2]].innerHTML && 
-            cells[comb[0]].innerHTML != '') {
-            if(cells[comb[0]].innerHTML == getX) {
-                showWinX();
-                cross(comb);
-                flag = -1;
+    // === Main function ===
+    const onSet = (e , i) => {
+        if(cellsFlags[i] === 0) {
+            switch (statusFlag) {
+                case -2:
+                case 1:
+                    setX(e.target);
+                    break;
+                case 0:
+                    setO(e.target);
+                    break;
             }
-            else {
-                showWinY();
-                cross(comb);
-                flag = -1;
-            }
+            cellsFlags[i] = 1;
+            toggleStatusFlag();
         }
-    });
-}
-
-const cross = (arr) => {
-    const line = document.querySelector(".line");
-
-    switch(arr) {
-        case combs[0]:
-        case combs[1]:
-        case combs[2]:
-            line.classList.add("hor");
-            if(arr[0] == 0) { line.style.top = "46px"; }
-            else if(arr[0] == 3) { line.style.top = "155px"; }
-            else if(arr[0] == 6) { line.style.top = "264px"; }
-            break;
-        case combs[3]:
-        case combs[4]:
-        case combs[5]:
-            line.classList.add("vert");
-            if(arr[0] == 0) { line.style.left = "46px"; }
-            else if(arr[0] == 1) { line.style.left = "155px"; }
-            else if(arr[0] == 2) { line.style.left = "264px"; }
-            break;
-        case combs[6]:
-        case combs[7]:
-            line.classList.add("diag");
-            if(arr[0] == 0) { line.style.transform = "rotate(45deg)"; }
-            else if(arr[0] == 2) { line.style.transform = "rotate(-45deg)"; }
-            break;
-    }
-}
-
-const restartGame = () => {
-    const cells = document.querySelectorAll("td");
-    const line = document.querySelector(".line");
-
-    cells.forEach(cell => cell.innerHTML = '');
-    activeCells = [0,0,0,0,0,0,0,0,0];
-    flag = -2;
-    line.className = 'line';
-    line.style = "";
-    showTurn();
-    hideWin();
-}
-
-const onSet = (e , i) => {
-    if(activeCells[i] === 0) {
-        if(flag === 1 || flag === -2) {
-            setX(e.target);
-            toggleFlag();
-        }
-        else if(flag === 0) {
-            setO(e.target);
-            toggleFlag();
+        if(cellsFlags.reduce((acc , num) => acc + num , 0) === 9) {
+            statusFlag = -3;
         }
         winCheck();
         showTurn();
-        activeCells[i] = 1;
     }
-}
+    // === / Main function ===
+
 
     return (
         <div className="app">
