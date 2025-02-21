@@ -121,6 +121,8 @@ const App = () => {
                 if(comb[0] === 0) { line.style.transform = "rotate(45deg)"; }
                 else if(comb[0] === 2) { line.style.transform = "rotate(-45deg)"; }
                 break;
+            default:
+                break;
         }
     }
     // === / Winner check ===
@@ -178,6 +180,8 @@ const App = () => {
                 switchX.classList.remove('switch__active');
                 switchO.classList.remove('switch__active');
                 break;
+            default:
+                break;
         }
     }
     // === / Turn show ===
@@ -224,6 +228,8 @@ const App = () => {
                     break;
                 case 0:
                     setO(e.target);
+                    break;
+                default:
                     break;
             }
             cellsFlags[i] = 1;
